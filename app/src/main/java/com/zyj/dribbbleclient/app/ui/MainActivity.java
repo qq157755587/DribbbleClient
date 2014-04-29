@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.download.HttpClientImageDownloader;
+import com.squareup.okhttp.apache.OkApacheClient;
 import com.zyj.dribbbleclient.app.R;
 import com.zyj.dribbbleclient.app.ui.fragment.NavigationDrawerFragment;
 import com.zyj.dribbbleclient.app.ui.fragment.PlaceholderFragment;
@@ -41,6 +43,7 @@ public class MainActivity extends ActionBarActivity
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(defaultOptions)
+                .imageDownloader(new HttpClientImageDownloader(this, new OkApacheClient()))
                 .writeDebugLogs()
                 .build();
         ImageLoader.getInstance().init(config);
