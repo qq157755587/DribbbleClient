@@ -8,11 +8,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.download.HttpClientImageDownloader;
-import com.squareup.okhttp.apache.OkApacheClient;
 import com.zyj.dribbbleclient.app.R;
 import com.zyj.dribbbleclient.app.ui.fragment.NavigationDrawerFragment;
 import com.zyj.dribbbleclient.app.ui.fragment.PlaceholderFragment;
@@ -35,18 +30,6 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Config ImageLoader
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
-                .build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
-                .defaultDisplayImageOptions(defaultOptions)
-                .imageDownloader(new HttpClientImageDownloader(this, new OkApacheClient()))
-                .writeDebugLogs()
-                .build();
-        ImageLoader.getInstance().init(config);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);

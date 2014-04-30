@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zyj.dribbbleclient.app.R;
 import com.zyj.dribbbleclient.app.model.Shot;
+import com.zyj.dribbbleclient.app.util.Util;
 
 public class ShotAdapter extends BaseAdapter {
     private Context mContext;
@@ -53,8 +54,16 @@ public class ShotAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
             ImageLoader.getInstance().cancelDisplayTask(holder.shot);
+            holder.shot.setImageBitmap(null);
         }
         Shot shot = mShots[position];
+
+        float scale = (float) shot.height / shot.width;
+        ViewGroup.LayoutParams params = holder.shot.getLayoutParams();
+        params.width = Util.DEVICE_WIDTH;
+        params.height = (int) (params.width * scale);
+        holder.shot.setLayoutParams(params);
+
         ImageLoader.getInstance().displayImage(shot.image_url, holder.shot);
         holder.title.setText(shot.title);
         holder.viewsCount.setText(String.valueOf(shot.views_count));
