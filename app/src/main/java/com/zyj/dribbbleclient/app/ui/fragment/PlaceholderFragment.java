@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
 import com.zyj.dribbbleclient.app.R;
 import com.zyj.dribbbleclient.app.api.DribbbleService;
+import com.zyj.dribbbleclient.app.db.DbShots;
 import com.zyj.dribbbleclient.app.model.Shots;
 import com.zyj.dribbbleclient.app.ui.MainActivity;
 import com.zyj.dribbbleclient.app.ui.adapter.ShotAdapter;
@@ -21,6 +23,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.android.AndroidLog;
 import retrofit.client.Response;
+import se.emilsjolander.sprinkles.Query;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -48,11 +51,28 @@ public class PlaceholderFragment extends Fragment implements SwipeRefreshLayout.
             mSwipeRefreshLayout.setRefreshing(false);
             mShotsAdapter.setShots(shots.shots);
             mShotsAdapter.notifyDataSetChanged();
+            // Save into db
+            String type = null;
+            if (response.getUrl().contains(DribbbleService.POPULAR)) {
+                type = DribbbleService.POPULAR;
+            } else if (response.getUrl().contains(DribbbleService.DEBUTS)) {
+                type = DribbbleService.DEBUTS;
+            } else if (response.getUrl().contains(DribbbleService.EVERYONE)) {
+                type = DribbbleService.EVERYONE;
+            }
+            DbShots dbShots = getDbShots();
+            if (dbShots == null) {
+                dbShots = new DbShots();
+            }
+            dbShots.type = type;
+            dbShots.body = shots.toJson();
+            dbShots.save();
         }
 
         @Override
         public void failure(RetrofitError error) {
             Log.e("ShotList", error.getMessage());
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     };
 
@@ -120,6 +140,17 @@ public class PlaceholderFragment extends Fragment implements SwipeRefreshLayout.
                 break;
         }
         mSwipeRefreshLayout.setRefreshing(true);
+
+        // Load cached data
+        DbShots dbShots = getDbShots();
+        if (dbShots != null) {
+            Gson gson = new Gson();
+            Shots shots = gson.fromJson(dbShots.body, Shots.class);
+            mShotsAdapter.setShots(shots.shots);
+            mShotsAdapter.notifyDataSetChanged();
+        }
+
+        // Get shots from server
         getShotList(1);
     }
 
@@ -130,5 +161,10 @@ public class PlaceholderFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onRefresh() {
         getShotList(1);
+    }
+
+    private DbShots getDbShots() {
+        return Query.one(DbShots.class,
+                "select * from shots where type=?", mShotType).get();
     }
 }

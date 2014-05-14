@@ -1,6 +1,6 @@
 package com.zyj.dribbbleclient.app.model;
 
-public class Player {
+public class Player extends BaseModel {
     public int id;
     public String name;
     public String username;

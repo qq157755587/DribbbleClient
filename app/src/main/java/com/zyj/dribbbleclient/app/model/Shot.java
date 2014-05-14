@@ -1,6 +1,6 @@
 package com.zyj.dribbbleclient.app.model;
 
-public class Shot {
+public class Shot extends BaseModel {
     public int id;
     public String title;
     public String url;
