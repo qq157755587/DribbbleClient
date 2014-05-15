@@ -14,6 +14,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.HttpClientImageDownloader;
 import com.squareup.okhttp.apache.OkApacheClient;
 import com.zyj.dribbbleclient.app.util.Util;
+import com.zyj.dribbbleclient.app.util.display.FilterBitmapDisplayer;
 
 import se.emilsjolander.sprinkles.Migration;
 import se.emilsjolander.sprinkles.Sprinkles;
@@ -27,7 +28,8 @@ public class App extends Application {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
-                .displayer(new FadeInBitmapDisplayer(500))
+//                .displayer(new FadeInBitmapDisplayer(500))
+                .displayer(new FilterBitmapDisplayer(2000))
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(defaultOptions)
