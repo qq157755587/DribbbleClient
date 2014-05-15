@@ -139,7 +139,6 @@ public class PlaceholderFragment extends Fragment implements SwipeRefreshLayout.
                 mShotType = DribbbleService.EVERYONE;
                 break;
         }
-        mShotType = DribbbleService.DEBUTS;
         mSwipeRefreshLayout.setRefreshing(true);
 
         // Load cached data

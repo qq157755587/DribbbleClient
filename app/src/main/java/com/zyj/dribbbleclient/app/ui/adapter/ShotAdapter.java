@@ -4,18 +4,13 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.zyj.dribbbleclient.app.R;
 import com.zyj.dribbbleclient.app.model.Shot;
-import com.zyj.dribbbleclient.app.util.imageaware.GLSurfaceViewAware;
 import com.zyj.dribbbleclient.app.util.Util;
-
-import jp.co.cyberagent.android.gpuimage.GPUImageColorMatrixFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageFilter;
-import jp.co.cyberagent.android.gpuimage.GPUImageView;
 
 public class ShotAdapter extends BaseAdapter {
     private Context mContext;
@@ -50,7 +45,7 @@ public class ShotAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = View.inflate(mContext, R.layout.shot_item, null);
             holder = new ViewHolder();
-            holder.shot = new GLSurfaceViewAware((GPUImageView) convertView.findViewById(R.id.shot));
+            holder.shot = (ImageView) convertView.findViewById(R.id.shot);
             holder.title = (TextView) convertView.findViewById(R.id.title);
             holder.viewsCount = (TextView) convertView.findViewById(R.id.views_count);
             holder.likesCount = (TextView) convertView.findViewById(R.id.likes_count);
@@ -58,16 +53,15 @@ public class ShotAdapter extends BaseAdapter {
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
-            ImageLoader.getInstance().cancelDisplayTask(holder.shot);
-            holder.shot.setImageBitmap(null);
+            ImageLoader.getInstance().displayImage(null, holder.shot);
         }
         Shot shot = mShots[position];
 
         float scale = (float) shot.height / shot.width;
-        ViewGroup.LayoutParams params = holder.shot.getWrappedView().getLayoutParams();
+        ViewGroup.LayoutParams params = holder.shot.getLayoutParams();
         params.width = Util.DEVICE_WIDTH;
         params.height = (int) (params.width * scale);
-        holder.shot.getWrappedView().setLayoutParams(params);
+        holder.shot.setLayoutParams(params);
 
         ImageLoader.getInstance().displayImage(shot.image_url, holder.shot);
         holder.title.setText(shot.title);
@@ -78,7 +72,7 @@ public class ShotAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        GLSurfaceViewAware shot;
+        ImageView shot;
         TextView title;
         TextView viewsCount;
         TextView likesCount;

@@ -28,5 +28,4 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.5.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
     compile 'se.emilsjolander:sprinkles:1.3.0'
-    compile 'jp.co.cyberagent.android.gpuimage:gpuimage-sample:1.1.1@jar'
 }

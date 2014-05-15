@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <jp.co.cyberagent.android.gpuimage.GPUImageView
+    <ImageView
         android:id="@+id/shot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
