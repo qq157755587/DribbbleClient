@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.HttpClientImageDownloader;
 import com.squareup.okhttp.apache.OkApacheClient;
@@ -32,6 +33,7 @@ public class App extends Application {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(defaultOptions)
                 .imageDownloader(new HttpClientImageDownloader(this, new OkApacheClient()))
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .writeDebugLogs()
                 .build();
         ImageLoader.getInstance().init(config);
