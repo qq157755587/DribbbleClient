@@ -12,8 +12,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.download.HttpClientImageDownloader;
-import com.squareup.okhttp.apache.OkApacheClient;
 import com.zyj.dribbbleclient.app.util.Util;
 
 import se.emilsjolander.sprinkles.Migration;
@@ -32,7 +30,6 @@ public class App extends Application {
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(defaultOptions)
-                .imageDownloader(new HttpClientImageDownloader(this, new OkApacheClient()))
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .writeDebugLogs()
                 .build();
