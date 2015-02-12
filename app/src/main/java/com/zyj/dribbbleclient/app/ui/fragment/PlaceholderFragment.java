@@ -1,6 +1,7 @@
 package com.zyj.dribbbleclient.app.ui.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -8,13 +9,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.zyj.dribbbleclient.app.R;
 import com.zyj.dribbbleclient.app.api.DribbbleService;
 import com.zyj.dribbbleclient.app.db.DbShots;
+import com.zyj.dribbbleclient.app.model.Shot;
 import com.zyj.dribbbleclient.app.model.Shots;
+import com.zyj.dribbbleclient.app.ui.DetailActivity;
 import com.zyj.dribbbleclient.app.ui.MainActivity;
 import com.zyj.dribbbleclient.app.ui.adapter.ShotAdapter;
 
@@ -125,6 +129,15 @@ public class PlaceholderFragment extends Fragment implements SwipeRefreshLayout.
         ListView listView = (ListView) rootView.findViewById(android.R.id.list);
         mShotsAdapter = new ShotAdapter(getActivity());
         listView.setAdapter(mShotsAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Shot shot = (Shot) mShotsAdapter.getItem(position);
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra("shot", shot);
+                startActivity(intent);
+            }
+        });
 
         // Get shot list
         int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
