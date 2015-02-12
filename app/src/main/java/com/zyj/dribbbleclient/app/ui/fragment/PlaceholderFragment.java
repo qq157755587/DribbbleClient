@@ -115,7 +115,7 @@ public class PlaceholderFragment extends Fragment implements SwipeRefreshLayout.
     private void init(View rootView) {
         // Setup swipe refresh layout
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefreshLayout.setColorScheme(android.R.color.holo_orange_light,
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_orange_light,
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_red_light,
                 android.R.color.holo_green_light);
