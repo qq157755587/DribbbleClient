@@ -25,8 +25,9 @@ public class App extends Application {
         // Config ImageLoader
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
-                .cacheOnDisc(true)
+                .cacheOnDisk(true)
                 .displayer(new FadeInBitmapDisplayer(500))
+                .resetViewBeforeLoading(true)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(defaultOptions)

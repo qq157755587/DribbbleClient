@@ -6,6 +6,8 @@ import com.zyj.dribbbleclient.app.R
 import android.widget.ImageView
 import com.zyj.dribbbleclient.app.model.Shot
 import com.nostra13.universalimageloader.core.ImageLoader
+import android.view.Window
+import android.view.View
 
 /**
  * Created by zhaoyuanjie on 15/2/12.
@@ -15,10 +17,13 @@ public class DetailActivity : ActionBarActivity() {
     private var shot : Shot? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportRequestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
         initData()
         initView()
+        setupListener()
     }
 
     fun initData() {
@@ -28,5 +33,9 @@ public class DetailActivity : ActionBarActivity() {
     fun initView() {
         image = findViewById(R.id.image) as ImageView?
         ImageLoader.getInstance().displayImage(shot?.image_url, image)
+    }
+
+    fun setupListener() {
+//        image?.setOnClickListener {}
     }
 }

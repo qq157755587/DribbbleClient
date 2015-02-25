@@ -53,7 +53,6 @@ public class ShotAdapter extends BaseAdapter {
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
-            ImageLoader.getInstance().displayImage(null, holder.shot);
         }
         Shot shot = mShots[position];
 

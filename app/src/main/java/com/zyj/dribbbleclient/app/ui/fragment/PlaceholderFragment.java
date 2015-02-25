@@ -1,15 +1,20 @@
 package com.zyj.dribbbleclient.app.ui.fragment;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -132,10 +137,14 @@ public class PlaceholderFragment extends Fragment implements SwipeRefreshLayout.
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ImageView imageView = (ImageView) view.findViewById(R.id.shot);
+                String transitionName = getString(R.string.transition_name);
                 Shot shot = (Shot) mShotsAdapter.getItem(position);
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra("shot", shot);
-                startActivity(intent);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        getActivity(), imageView, transitionName);
+                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
             }
         });
 
