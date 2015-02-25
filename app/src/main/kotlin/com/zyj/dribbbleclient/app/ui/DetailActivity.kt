@@ -36,6 +36,10 @@ public class DetailActivity : ActionBarActivity() {
     }
 
     fun setupListener() {
-//        image?.setOnClickListener {}
+        image?.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                onBackPressed()
+            }
+        })
     }
 }
