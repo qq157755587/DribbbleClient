@@ -32,7 +32,6 @@ public class App extends Application {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .defaultDisplayImageOptions(defaultOptions)
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .writeDebugLogs()
                 .build();
         ImageLoader.getInstance().init(config);
 

@@ -7,7 +7,6 @@ import android.widget.ImageView
 import com.zyj.dribbbleclient.app.model.Shot
 import com.nostra13.universalimageloader.core.ImageLoader
 import android.view.Window
-import android.view.View
 
 /**
  * Created by zhaoyuanjie on 15/2/12.
@@ -36,10 +35,6 @@ public class DetailActivity : ActionBarActivity() {
     }
 
     fun setupListener() {
-        image?.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                onBackPressed()
-            }
-        })
+        image?.setOnClickListener { onBackPressed() }
     }
 }
