@@ -1,13 +1,11 @@
 package com.zyj.dribbbleclient.app.ui.fragment;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,10 +26,9 @@ import com.zyj.dribbbleclient.app.ui.MainActivity;
 import com.zyj.dribbbleclient.app.ui.adapter.ShotAdapter;
 
 import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.android.AndroidLog;
-import retrofit.client.Response;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 import se.emilsjolander.sprinkles.Query;
 
 /**
@@ -44,7 +41,7 @@ public class PlaceholderFragment extends Fragment implements SwipeRefreshLayout.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
 
-    private static final String DRIBBBLE_END_POINT = "http://api.dribbble.com";
+    private static final String DRIBBBLE_END_POINT = "http://api.dribbble.com/";
 
     private DribbbleService service;
 
@@ -56,30 +53,33 @@ public class PlaceholderFragment extends Fragment implements SwipeRefreshLayout.
 
     private Callback<Shots> mShotListCallback = new Callback<Shots>() {
         @Override
-        public void success(Shots shots, Response response) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            mShotsAdapter.setShots(shots.shots);
-            mShotsAdapter.notifyDataSetChanged();
-            // Save into db
-            String type = null;
-            if (response.getUrl().contains(DribbbleService.POPULAR)) {
-                type = DribbbleService.POPULAR;
-            } else if (response.getUrl().contains(DribbbleService.DEBUTS)) {
-                type = DribbbleService.DEBUTS;
-            } else if (response.getUrl().contains(DribbbleService.EVERYONE)) {
-                type = DribbbleService.EVERYONE;
+        public void onResponse(Response<Shots> response) {
+            Shots shots = response.body();
+            if (shots != null) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                mShotsAdapter.setShots(shots.shots);
+                mShotsAdapter.notifyDataSetChanged();
+                // Save into db
+                String type = null;
+                if (response.raw().request().urlString().contains(DribbbleService.POPULAR)) {
+                    type = DribbbleService.POPULAR;
+                } else if (response.raw().request().urlString().contains(DribbbleService.DEBUTS)) {
+                    type = DribbbleService.DEBUTS;
+                } else if (response.raw().request().urlString().contains(DribbbleService.EVERYONE)) {
+                    type = DribbbleService.EVERYONE;
+                }
+                DbShots dbShots = getDbShots();
+                if (dbShots == null) {
+                    dbShots = new DbShots();
+                }
+                dbShots.type = type;
+                dbShots.body = shots.toJson();
+                dbShots.save();
             }
-            DbShots dbShots = getDbShots();
-            if (dbShots == null) {
-                dbShots = new DbShots();
-            }
-            dbShots.type = type;
-            dbShots.body = shots.toJson();
-            dbShots.save();
         }
 
         @Override
-        public void failure(RetrofitError error) {
+        public void onFailure(Throwable error) {
             Log.e("ShotList", error.getMessage());
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -98,12 +98,11 @@ public class PlaceholderFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     public PlaceholderFragment() {
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(DRIBBBLE_END_POINT)
-                .setLogLevel(RestAdapter.LogLevel.BASIC)
-                .setLog(new AndroidLog("Dribbble RESTful"))
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DRIBBBLE_END_POINT)
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        service = restAdapter.create(DribbbleService.class);
+        service = retrofit.create(DribbbleService.class);
     }
 
     @Override
@@ -177,7 +176,7 @@ public class PlaceholderFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private void getShotList(int page) {
-        service.shotList(mShotType, page, mShotListCallback);
+        service.shotList(mShotType, page).enqueue(mShotListCallback);
     }
 
     @Override
