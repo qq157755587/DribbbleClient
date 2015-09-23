@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -41,17 +42,12 @@ public class MainActivity extends AppCompatActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-
     private static final String DRIBBBLE_END_POINT = "http://api.dribbble.com/";
-
     private DribbbleService service;
-
     private String mShotType;
-
     private ShotAdapter mShotsAdapter;
-
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
+    private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private Callback<Shots> mShotListCallback = new Callback<Shots>() {
@@ -122,10 +118,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         // NavigationView
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -203,6 +199,7 @@ public class MainActivity extends AppCompatActivity
         getShotList(position);
         onSectionAttached(position);
         restoreActionBar();
+        mDrawerLayout.closeDrawer(Gravity.START);
         return true;
     }
 
