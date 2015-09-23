@@ -7,7 +7,7 @@ import retrofit.Retrofit
  * Created by zhaoyuanjie on 15/9/23.
  */
 
-object Restful {
+public object Restful {
 
     val baseUrl = "http://api.dribbble.com/"
     val retrofitClient: Retrofit = Retrofit.Builder()

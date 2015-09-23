@@ -1,0 +1,1 @@
+select * from shots where type = ?
