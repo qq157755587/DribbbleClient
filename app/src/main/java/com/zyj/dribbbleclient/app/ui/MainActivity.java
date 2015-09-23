@@ -2,13 +2,17 @@ package com.zyj.dribbbleclient.app.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -22,7 +26,6 @@ import com.zyj.dribbbleclient.app.db.DbShots;
 import com.zyj.dribbbleclient.app.model.Shot;
 import com.zyj.dribbbleclient.app.model.Shots;
 import com.zyj.dribbbleclient.app.ui.adapter.ShotAdapter;
-import com.zyj.dribbbleclient.app.ui.fragment.NavigationDrawerFragment;
 
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -32,7 +35,7 @@ import se.emilsjolander.sprinkles.Query;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity
     private ShotAdapter mShotsAdapter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private ActionBarDrawerToggle mDrawerToggle;
 
     private Callback<Shots> mShotListCallback = new Callback<Shots>() {
         @Override
@@ -94,18 +99,15 @@ public class MainActivity extends AppCompatActivity
         getShotList(0);
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
     private void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        mNavigationDrawerFragment = (NavigationDrawerFragment)
-//                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-//
-//        // Set up the drawer.
-//        mNavigationDrawerFragment.setUp(
-//                R.id.navigation_drawer,
-//                (DrawerLayout) findViewById(R.id.drawer_layout),
-//                toolbar);
 
         // Setup swipe refresh layout
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
@@ -119,6 +121,15 @@ public class MainActivity extends AppCompatActivity
                 getShotListFromServer(1);
             }
         });
+
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.setDrawerListener(mDrawerToggle);
+
+        // NavigationView
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         // Setup listview
         ListView listView = (ListView) findViewById(android.R.id.list);
@@ -176,10 +187,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        int position = 0;
+        switch (menuItem.getItemId()) {
+            case R.id.navigation_item_1:
+                position = 0;
+                break;
+            case R.id.navigation_item_2:
+                position = 1;
+                break;
+            case R.id.navigation_item_3:
+                position = 2;
+                break;
+        }
         getShotList(position);
         onSectionAttached(position);
         restoreActionBar();
+        return true;
     }
 
     public void onSectionAttached(int number) {
