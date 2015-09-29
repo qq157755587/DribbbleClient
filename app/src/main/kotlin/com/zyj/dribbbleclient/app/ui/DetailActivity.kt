@@ -1,17 +1,17 @@
 package com.zyj.dribbbleclient.app.ui
 
-import android.support.v7.app.ActionBarActivity
 import android.os.Bundle
-import com.zyj.dribbbleclient.app.R
-import android.widget.ImageView
-import com.zyj.dribbbleclient.app.model.Shot
-import com.nostra13.universalimageloader.core.ImageLoader
+import android.support.v7.app.AppCompatActivity
 import android.view.Window
+import android.widget.ImageView
+import com.nostra13.universalimageloader.core.ImageLoader
+import com.zyj.dribbbleclient.app.R
+import com.zyj.dribbbleclient.app.model.Shot
 
 /**
  * Created by zhaoyuanjie on 15/2/12.
  */
-public class DetailActivity : ActionBarActivity() {
+public class DetailActivity : AppCompatActivity() {
     private var image : ImageView? = null;
     private var shot : Shot? = null;
 

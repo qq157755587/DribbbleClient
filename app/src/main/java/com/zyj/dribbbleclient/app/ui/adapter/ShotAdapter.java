@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zyj.dribbbleclient.app.R;
 import com.zyj.dribbbleclient.app.model.Shot;
-import com.zyj.dribbbleclient.app.util.Util;
+import com.zyj.dribbbleclient.app.util.Device;
 
 public class ShotAdapter extends BaseAdapter {
     private Context mContext;
@@ -58,7 +58,7 @@ public class ShotAdapter extends BaseAdapter {
 
         float scale = (float) shot.height / shot.width;
         ViewGroup.LayoutParams params = holder.shot.getLayoutParams();
-        params.width = Util.DEVICE_WIDTH;
+        params.width = Device.width;
         params.height = (int) (params.width * scale);
         holder.shot.setLayoutParams(params);
 
