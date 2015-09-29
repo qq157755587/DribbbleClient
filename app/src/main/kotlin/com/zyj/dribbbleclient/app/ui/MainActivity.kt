@@ -29,6 +29,7 @@ import com.zyj.dribbbleclient.app.model.Shots
 import com.zyj.dribbbleclient.app.ui.adapter.ShotAdapter
 import retrofit.Callback
 import retrofit.Response
+import retrofit.Retrofit
 
 
 public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -44,7 +45,7 @@ public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     private var mDrawerToggle: ActionBarDrawerToggle? = null
 
     private val mShotListCallback = object : Callback<Shots> {
-        override fun onResponse(response: Response<Shots>) {
+        override fun onResponse(response: Response<Shots>, retrofit: Retrofit) {
             val shots = response.body()
             if (shots != null) {
                 mSwipeRefreshLayout!!.isRefreshing = false
