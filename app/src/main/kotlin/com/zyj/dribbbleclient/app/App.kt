@@ -44,7 +44,11 @@ public class App : Application() {
         sprinkles.addMigration(object : Migration() {
             override fun doMigration(sqLiteDatabase: SQLiteDatabase) {
                 sqLiteDatabase.execSQL(
-                        "CREATE TABLE shots (" + "id INTEGER PRIMARY KEY AUTOINCREMENT," + "type TEXT," + "body TEXT" + ")")
+                        """CREATE TABLE shots (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        type TEXT,
+                        body TEXT)"""
+                )
             }
         })
     }
