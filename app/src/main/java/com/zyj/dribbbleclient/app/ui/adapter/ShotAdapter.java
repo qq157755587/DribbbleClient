@@ -62,7 +62,7 @@ public class ShotAdapter extends BaseAdapter {
         params.height = (int) (params.width * scale);
         holder.shot.setLayoutParams(params);
 
-        ImageLoader.getInstance().displayImage(shot.image_url, holder.shot);
+        ImageLoader.getInstance().displayImage(shot.images.normal, holder.shot);
         holder.title.setText(shot.title);
         holder.viewsCount.setText(String.valueOf(shot.views_count));
         holder.likesCount.setText(String.valueOf(shot.likes_count));

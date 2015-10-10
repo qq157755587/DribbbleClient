@@ -8,7 +8,7 @@ import se.emilsjolander.sprinkles.Query
  */
 public object DataBase {
 
-    public fun getShots(type: String): DbShots? {
-        return Query.one(DbShots::class.java, R.raw.query_shots_with_type, type).get()
+    public fun getShots(): DbShots? {
+        return Query.one(DbShots::class.java, R.raw.query_shots_with_type).get()
     }
 }

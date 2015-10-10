@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -17,14 +18,13 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.ListView
+import android.widget.Toast
 import com.google.gson.Gson
 import com.zyj.dribbbleclient.app.R
-import com.zyj.dribbbleclient.app.api.DribbbleService
 import com.zyj.dribbbleclient.app.api.Restful
 import com.zyj.dribbbleclient.app.db.DataBase
 import com.zyj.dribbbleclient.app.db.DbShots
 import com.zyj.dribbbleclient.app.model.Shot
-import com.zyj.dribbbleclient.app.model.Shots
 import com.zyj.dribbbleclient.app.ui.adapter.ShotAdapter
 import retrofit.Callback
 import retrofit.Response
@@ -33,10 +33,6 @@ import retrofit.Retrofit
 
 public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    /**
-     * Used to store the last screen title. For use in [.restoreActionBar].
-     */
-    private var mShotType: String = DribbbleService.POPULAR
     private var mShotsAdapter: ShotAdapter? = null
     private var mSwipeRefreshLayout: SwipeRefreshLayout? = null
     private var mDrawerLayout: DrawerLayout? = null
@@ -47,7 +43,6 @@ public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
-        switchType(0)
         getShotList()
     }
 
@@ -67,7 +62,7 @@ public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_red_light,
                 android.R.color.holo_green_light)
-        mSwipeRefreshLayout!!.setOnRefreshListener { getShotListFromServer(1) }
+        mSwipeRefreshLayout!!.setOnRefreshListener { getShotListFromServer() }
 
         mDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
         mDrawerToggle = ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
@@ -101,77 +96,45 @@ public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         mSwipeRefreshLayout!!.isRefreshing = true
 
         // Load cached data
-        val dbShots = DataBase.getShots(mShotType)
+        val dbShots = DataBase.getShots()
         if (dbShots != null) {
             val gson = Gson()
-            val shots = gson.fromJson(dbShots.body, Shots::class.java)
-            mShotsAdapter!!.setShots(shots.shots)
+            val shots = gson.fromJson(dbShots.body, Array<out Shot>::class.java)
+            mShotsAdapter!!.setShots(shots)
             mShotsAdapter!!.notifyDataSetChanged()
         }
 
         // Get shots from server
-        getShotListFromServer(1)
+        getShotListFromServer()
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        var position = 0
-        when (menuItem.itemId) {
-            R.id.navigation_item_1 -> position = 0
-            R.id.navigation_item_2 -> position = 1
-            R.id.navigation_item_3 -> position = 2
-        }
-        switchType(position)
-        getShotList()
+        // todo
         mDrawerLayout!!.closeDrawer(Gravity.START)
         return true
     }
 
-    private fun switchType(position: Int) {
-        when (position) {
-            0 -> {
-                supportActionBar.title = getString(R.string.title_section1)
-                mShotType = DribbbleService.POPULAR
-            }
-            1 -> {
-                supportActionBar.title = getString(R.string.title_section2)
-                mShotType = DribbbleService.DEBUTS
-            }
-            2 -> {
-                supportActionBar.title = getString(R.string.title_section3)
-                mShotType = DribbbleService.EVERYONE
-            }
-        }
-    }
-
-    private fun getShotListFromServer(page: Int) {
-        Restful.getService().shotList(mShotType, page).enqueue(object: Callback<Shots> {
-            override fun onResponse(response: Response<Shots>, retrofit: Retrofit) {
+    private fun getShotListFromServer() {
+        Restful.getService().shotList().enqueue(object: Callback<Array<out Shot>> {
+            override fun onResponse(response: Response<Array<out Shot>>, retrofit: Retrofit) {
                 val shots = response.body()
                 if (shots != null) {
                     mSwipeRefreshLayout!!.isRefreshing = false
-                    mShotsAdapter!!.setShots(shots.shots)
+                    mShotsAdapter!!.setShots(shots)
                     mShotsAdapter!!.notifyDataSetChanged()
                     // Save into db
-                    var type: String? = null
-                    if (response.raw().request().urlString().contains(DribbbleService.POPULAR)) {
-                        type = DribbbleService.POPULAR
-                    } else if (response.raw().request().urlString().contains(DribbbleService.DEBUTS)) {
-                        type = DribbbleService.DEBUTS
-                    } else if (response.raw().request().urlString().contains(DribbbleService.EVERYONE)) {
-                        type = DribbbleService.EVERYONE
-                    }
-                    var dbShots = DataBase.getShots(mShotType)
+                    var dbShots = DataBase.getShots()
                     if (dbShots == null) {
                         dbShots = DbShots()
                     }
-                    dbShots.type = type
-                    dbShots.body = shots.toJson()
+                    dbShots.body = Gson().toJson(shots)
                     dbShots.save()
                 }
             }
 
             override fun onFailure(t: Throwable) {
                 mSwipeRefreshLayout!!.isRefreshing = false
+                Toast.makeText(MainActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         })
     }

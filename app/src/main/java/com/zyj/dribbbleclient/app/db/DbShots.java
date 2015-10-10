@@ -13,9 +13,6 @@ public class DbShots extends Model {
     @Column("id")
     private long id;
 
-    @Column("type")
-    public String type;
-
     @Column("body")
     public String body;
 

@@ -31,7 +31,7 @@ public class DetailActivity : AppCompatActivity() {
 
     fun initView() {
         image = findViewById(R.id.image) as ImageView?
-        ImageLoader.getInstance().displayImage(shot?.image_url, image)
+        ImageLoader.getInstance().displayImage(shot?.images?.normal, image)
     }
 
     fun setupListener() {

@@ -6,19 +6,13 @@ import android.os.Parcelable;
 public class Shot extends BaseModel implements Parcelable {
     public int id;
     public String title;
-    public String url;
-    public String short_url;
-    public String image_url;
-    public String image_teaser_url;
+    public String description;
     public int width;
     public int height;
+    public Images images;
     public int views_count;
     public int likes_count;
     public int comments_count;
-    public int rebounds_count;
-    public int rebound_source_id;
-    public String created_at;
-    public Player player;
 
     @Override
     public int describeContents() {
@@ -29,40 +23,28 @@ public class Shot extends BaseModel implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
         dest.writeString(this.title);
-        dest.writeString(this.url);
-        dest.writeString(this.short_url);
-        dest.writeString(this.image_url);
-        dest.writeString(this.image_teaser_url);
+        dest.writeString(this.description);
         dest.writeInt(this.width);
         dest.writeInt(this.height);
+        dest.writeParcelable(this.images, 0);
         dest.writeInt(this.views_count);
         dest.writeInt(this.likes_count);
         dest.writeInt(this.comments_count);
-        dest.writeInt(this.rebounds_count);
-        dest.writeInt(this.rebound_source_id);
-        dest.writeString(this.created_at);
-        dest.writeParcelable(this.player, 0);
     }
 
     public Shot() {
     }
 
-    private Shot(Parcel in) {
+    protected Shot(Parcel in) {
         this.id = in.readInt();
         this.title = in.readString();
-        this.url = in.readString();
-        this.short_url = in.readString();
-        this.image_url = in.readString();
-        this.image_teaser_url = in.readString();
+        this.description = in.readString();
         this.width = in.readInt();
         this.height = in.readInt();
+        this.images = in.readParcelable(Images.class.getClassLoader());
         this.views_count = in.readInt();
         this.likes_count = in.readInt();
         this.comments_count = in.readInt();
-        this.rebounds_count = in.readInt();
-        this.rebound_source_id = in.readInt();
-        this.created_at = in.readString();
-        this.player = in.readParcelable(Player.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<Shot> CREATOR = new Parcelable.Creator<Shot>() {

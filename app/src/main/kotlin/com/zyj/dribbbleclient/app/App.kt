@@ -46,7 +46,6 @@ public class App : Application() {
                 sqLiteDatabase.execSQL(
                         """CREATE TABLE shots (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        type TEXT,
                         body TEXT)"""
                 )
             }

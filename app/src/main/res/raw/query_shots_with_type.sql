@@ -1,1 +1,1 @@
-select * from shots where type = ?
+select * from shots
