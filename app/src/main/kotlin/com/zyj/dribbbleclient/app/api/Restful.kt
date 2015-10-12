@@ -6,6 +6,7 @@ import com.squareup.okhttp.Request
 import com.squareup.okhttp.Response
 import retrofit.GsonConverterFactory
 import retrofit.Retrofit
+import retrofit.RxJavaCallAdapterFactory
 
 /**
  * Created by zhaoyuanjie on 15/9/23.
@@ -30,6 +31,7 @@ public object Restful {
         val retrofitClient: Retrofit = Retrofit.Builder()
                 .baseUrl("https://api.dribbble.com/v1/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(client)
                 .build()
         return retrofitClient.create(DribbbleService::class.java)

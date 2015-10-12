@@ -29,6 +29,9 @@ import com.zyj.dribbbleclient.app.ui.adapter.ShotAdapter
 import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 
 
 public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -49,6 +52,12 @@ public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         mDrawerToggle!!.syncState()
+    }
+
+    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+        // todo
+        mDrawerLayout!!.closeDrawer(Gravity.START)
+        return true
     }
 
     private fun initView() {
@@ -96,6 +105,13 @@ public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         mSwipeRefreshLayout!!.isRefreshing = true
 
         // Load cached data
+        getShotListFromDB()
+
+        // Get shots from server
+        getShotListFromServer()
+    }
+
+    private fun getShotListFromDB() {
         val dbShots = DataBase.getShots()
         if (dbShots != null) {
             val gson = Gson()
@@ -103,41 +119,50 @@ public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             mShotsAdapter!!.setShots(shots)
             mShotsAdapter!!.notifyDataSetChanged()
         }
-
-        // Get shots from server
-        getShotListFromServer()
-    }
-
-    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        // todo
-        mDrawerLayout!!.closeDrawer(Gravity.START)
-        return true
     }
 
     private fun getShotListFromServer() {
-        Restful.getService().shotList().enqueue(object: Callback<Array<out Shot>> {
-            override fun onResponse(response: Response<Array<out Shot>>, retrofit: Retrofit) {
-                val shots = response.body()
-                if (shots != null) {
-                    mSwipeRefreshLayout!!.isRefreshing = false
-                    mShotsAdapter!!.setShots(shots)
-                    mShotsAdapter!!.notifyDataSetChanged()
-                    // Save into db
-                    var dbShots = DataBase.getShots()
-                    if (dbShots == null) {
-                        dbShots = DbShots()
+        Restful.getService()
+                .shotList()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { shots ->
+                    if (shots != null) {
+                        mSwipeRefreshLayout!!.isRefreshing = false
+                        mShotsAdapter!!.setShots(shots)
+                        mShotsAdapter!!.notifyDataSetChanged()
+                        // Save into db
+                        var dbShots = DataBase.getShots()
+                        if (dbShots == null) {
+                            dbShots = DbShots()
+                        }
+                        dbShots.body = Gson().toJson(shots)
+                        dbShots.save()
                     }
-                    dbShots.body = Gson().toJson(shots)
-                    dbShots.save()
-                } else {
-                    Log.e("ShotList", response.errorBody().string())
                 }
-            }
-
-            override fun onFailure(t: Throwable) {
-                mSwipeRefreshLayout!!.isRefreshing = false
-                Log.e("ShotList", t.getMessage())
-            }
-        })
+//        Restful.getService().shotList().enqueue(object: Callback<Array<out Shot>> {
+//            override fun onResponse(response: Response<Array<out Shot>>, retrofit: Retrofit) {
+//                val shots = response.body()
+//                if (shots != null) {
+//                    mSwipeRefreshLayout!!.isRefreshing = false
+//                    mShotsAdapter!!.setShots(shots)
+//                    mShotsAdapter!!.notifyDataSetChanged()
+//                    // Save into db
+//                    var dbShots = DataBase.getShots()
+//                    if (dbShots == null) {
+//                        dbShots = DbShots()
+//                    }
+//                    dbShots.body = Gson().toJson(shots)
+//                    dbShots.save()
+//                } else {
+//                    Log.e("ShotList", response.errorBody().string())
+//                }
+//            }
+//
+//            override fun onFailure(t: Throwable) {
+//                mSwipeRefreshLayout!!.isRefreshing = false
+//                Log.e("ShotList", t.getMessage())
+//            }
+//        })
     }
 }
