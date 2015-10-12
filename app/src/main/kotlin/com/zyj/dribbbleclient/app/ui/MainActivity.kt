@@ -129,12 +129,14 @@ public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                     }
                     dbShots.body = Gson().toJson(shots)
                     dbShots.save()
+                } else {
+                    Log.e("ShotList", response.errorBody().string())
                 }
             }
 
             override fun onFailure(t: Throwable) {
                 mSwipeRefreshLayout!!.isRefreshing = false
-                Toast.makeText(MainActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("ShotList", t.getMessage())
             }
         })
     }

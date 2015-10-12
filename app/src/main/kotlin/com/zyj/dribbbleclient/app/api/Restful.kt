@@ -22,7 +22,7 @@ public object Restful {
                     return chain.proceed(originalRequest)
                 }
                 val newRequest = originalRequest.newBuilder()
-                        .header("Authorization", "8aac5e2678da4b5dda86f5c558d6b7e368d138ba5df7fe8e3c351bb640e68721")
+                        .header("Authorization", "Bearer 8aac5e2678da4b5dda86f5c558d6b7e368d138ba5df7fe8e3c351bb640e68721")
                         .build()
                 return chain.proceed(newRequest)
             }
