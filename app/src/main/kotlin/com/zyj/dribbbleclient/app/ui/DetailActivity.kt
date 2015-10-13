@@ -13,7 +13,8 @@ import com.zyj.dribbbleclient.app.model.Shot
  */
 public class DetailActivity : AppCompatActivity() {
     private var image : ImageView? = null;
-    private var shot : Shot? = null;
+    private var id = 0;
+    private var url : String? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportRequestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS)
@@ -26,12 +27,13 @@ public class DetailActivity : AppCompatActivity() {
     }
 
     fun initData() {
-        shot = getIntent().getParcelableExtra("shot")
+        id = intent.getIntExtra("id", 0)
+        url = intent.getStringExtra("url")
     }
 
     fun initView() {
         image = findViewById(R.id.image) as ImageView?
-        ImageLoader.getInstance().displayImage(shot?.images?.normal, image)
+        ImageLoader.getInstance().displayImage(url, image)
     }
 
     fun setupListener() {
