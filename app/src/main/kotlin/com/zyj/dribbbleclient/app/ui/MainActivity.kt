@@ -18,7 +18,6 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.ListView
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.zyj.dribbbleclient.app.R
 import com.zyj.dribbbleclient.app.api.Restful
 import com.zyj.dribbbleclient.app.db.DataBase
@@ -89,7 +88,7 @@ public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 val shot = mShotsAdapter!!.getItem(position) as Shot
                 val intent = Intent(this@MainActivity, DetailActivity::class.java)
                 intent.putExtra("id", shot.id)
-                intent.putExtra("url", shot.images?.normal)
+                intent.putExtra("url", shot.images.normal)
                 val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this@MainActivity, imageView, transitionName)
                 ActivityCompat.startActivity(this@MainActivity, intent, options.toBundle())
