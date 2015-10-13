@@ -1,10 +1,12 @@
 package com.zyj.dribbbleclient.app.api
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.squareup.okhttp.Interceptor
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
 import com.squareup.okhttp.Response
-import retrofit.GsonConverterFactory
+import com.zyj.dribbbleclient.app.util.Jackson
+import retrofit.JacksonConverterFactory
 import retrofit.Retrofit
 import retrofit.RxJavaCallAdapterFactory
 
@@ -30,7 +32,7 @@ public object Restful {
         })
         val retrofitClient: Retrofit = Retrofit.Builder()
                 .baseUrl("https://api.dribbble.com/v1/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create(Jackson.mapper()))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(client)
                 .build()

@@ -18,13 +18,14 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.ListView
-import com.google.gson.Gson
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.zyj.dribbbleclient.app.R
 import com.zyj.dribbbleclient.app.api.Restful
 import com.zyj.dribbbleclient.app.db.DataBase
 import com.zyj.dribbbleclient.app.db.DbShots
 import com.zyj.dribbbleclient.app.model.Shot
 import com.zyj.dribbbleclient.app.ui.adapter.ShotAdapter
+import com.zyj.dribbbleclient.app.util.Jackson
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
@@ -110,8 +111,7 @@ public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     private fun getShotListFromDB() {
         val dbShots = DataBase.getShots()
         if (dbShots != null) {
-            val gson = Gson()
-            val shots = gson.fromJson(dbShots.body, Array<out Shot>::class.java)
+            val shots = Jackson.mapper().readValue(dbShots.body, Array<out Shot>::class.java)
             mShotsAdapter!!.setShots(shots)
             mShotsAdapter!!.notifyDataSetChanged()
         }
@@ -127,7 +127,7 @@ public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                     if (dbShots == null) {
                         dbShots = DbShots()
                     }
-                    dbShots.body = Gson().toJson(shots)
+                    dbShots.body = Jackson.mapper().writeValueAsString(shots)
                     dbShots.save()
                 }
                 .subscribe(
