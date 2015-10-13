@@ -13,4 +13,6 @@
 * [DrawerLayout](http://developer.android.com/training/implementing-navigation/nav-drawer.html) 来创建导航抽屉
 * [SwipeRefreshLayout](https://developer.android.com/reference/android/support/v4/widget/SwipeRefreshLayout.html) 来实现下拉刷新
 
-新加入Kotlin，尝试完全用Kotlin代替Java。
+2015/02 新加入Kotlin，尝试完全用Kotlin代替Java。
+
+2015/10 新加入RxJava/RxAndroid
