@@ -56,17 +56,17 @@ public class ShotAdapter extends BaseAdapter {
         }
         Shot shot = mShots[position];
 
-        float scale = (float) shot.height / shot.width;
+        float scale = (float) shot.getHeight() / shot.getWidth();
         ViewGroup.LayoutParams params = holder.shot.getLayoutParams();
         params.width = Device.width;
         params.height = (int) (params.width * scale);
         holder.shot.setLayoutParams(params);
 
-        ImageLoader.getInstance().displayImage(shot.images.normal, holder.shot);
-        holder.title.setText(shot.title);
-        holder.viewsCount.setText(String.valueOf(shot.views_count));
-        holder.likesCount.setText(String.valueOf(shot.likes_count));
-        holder.commentsCount.setText(String.valueOf(shot.comments_count));
+        ImageLoader.getInstance().displayImage(shot.getImages().getNormal(), holder.shot);
+        holder.title.setText(shot.getTitle());
+        holder.viewsCount.setText(String.valueOf(shot.getViews_count()));
+        holder.likesCount.setText(String.valueOf(shot.getLikes_count()));
+        holder.commentsCount.setText(String.valueOf(shot.getComments_count()));
         return convertView;
     }
 
