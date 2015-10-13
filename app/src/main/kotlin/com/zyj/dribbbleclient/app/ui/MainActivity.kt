@@ -117,9 +117,8 @@ public class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItem
     }
 
     private fun getShotListFromServer() {
-        Restful.getService()
-                .shotList()
-                .subscribeOn(Schedulers.io())
+        val observable = Restful.getService().shotList()
+        observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext { shots ->
                     // Save into db

@@ -3,7 +3,7 @@ package com.zyj.dribbbleclient.app.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Shot extends BaseModel implements Parcelable {
+public class Shot implements Parcelable {
     public int id;
     public String title;
     public String description;
